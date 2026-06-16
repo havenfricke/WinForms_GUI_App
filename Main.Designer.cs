@@ -1,58 +1,62 @@
-﻿using WinForms_GUI_App.UI;
+﻿using System.Drawing;
+using System.Windows.Forms;
+using WinForms_GUI_App.UI;
+using WinForms_GUI_App.UI.Pages;
 
 namespace WinForms_GUI_App
 {
-    public partial class Main : Form
+    partial class Main
     {
+        private ContentManager _contentManager;
         private void InitializeCustomComponents()
         {
-            // 1. Initialize the Grid System
-            TableLayoutPanel gridLayout = new TableLayoutPanel();
-            gridLayout.Dock = DockStyle.Fill; // Makes the grid span the entire Form
-            gridLayout.ColumnCount = 2;       // Define 2 columns
-            gridLayout.RowCount = 2;          // Define 2 rows
+            TableLayoutPanel mainGrid = new TableLayoutPanel();
+            mainGrid.Dock = DockStyle.Fill;
+            mainGrid.ColumnCount = 2;
+            mainGrid.RowCount = 1;
+            mainGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200F));
+            mainGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            mainGrid.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
 
-            // Configure column and row sizing
-            gridLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F)); // Column 0: 50% width
-            gridLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F)); // Column 1: 50% width
-            gridLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));           // Row 0: Heights map to content
-            gridLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));      // Row 1: Exactly 50 pixels tall
+            Navigation navComponent = new Navigation();
+            navComponent.OnNavigate += NavigationComponent_OnNavigate;
 
-            // 2. Instantiate UI Elements using the new Header class
-            Header headerFactory = new Header();
-            Label h1Label = headerFactory.One("Hello, WinForms!");
-            Label h2Label = headerFactory.Two("This is Header Two", Color.LightBlue);
+            // 1. Initialize the ContentManager
+            _contentManager = new ContentManager();
 
-            // 3. Create the Button
-            Button myActionBtn = new Button();
-            myActionBtn.Text = "Click Me";
-            myActionBtn.Size = new Size(100, 30);
-            myActionBtn.BackColor = Color.LightGray;
-            myActionBtn.Click += MyActionBtn_Click;
+            FlowLayoutPanel navPanel = navComponent.InitializeNavbar();
+            Panel contentPanel = _contentManager.InitializeContentPanel();
 
-            // 4. Assign Controls to specific Grid Cells (Control, Column Index, Row Index)
-            gridLayout.Controls.Add(h1Label, 0, 0);     // Top-Left cell
-            gridLayout.Controls.Add(h2Label, 1, 0);     // Top-Right cell
-            gridLayout.Controls.Add(myActionBtn, 0, 1); // Bottom-Left cell
+            mainGrid.Controls.Add(navPanel, 0, 0);
+            mainGrid.Controls.Add(contentPanel, 1, 0);
+            this.Controls.Add(mainGrid);
 
-            // 5. CRITICAL: Add the grid to the Form's Controls collection
-            this.Controls.Add(gridLayout);
+            // 2. Load the default startup view
+            _contentManager.LoadView(new Home());
         }
 
-        // 5. Define the Event Handler logic
-        private void MyActionBtn_Click(object sender, EventArgs e)
+        // 3. Handle the routing request
+        private void NavigationComponent_OnNavigate(object sender, string targetPage)
         {
-            MessageBox.Show("The custom button was clicked!");
+            System.Diagnostics.Debug.WriteLine($"Loading view: {targetPage}");
+
+            switch (targetPage)
+            {
+                case "Home":
+                    _contentManager.LoadView(new Home());
+                    break;
+                case "Settings":
+                    _contentManager.LoadView(new Settings());
+                    break;
+                default:
+                    System.Diagnostics.Debug.WriteLine($"View '{targetPage}' not found.");
+                    break;
+            }
         }
-        /// <summary>
-        ///  Required designer variable.
-        /// </summary>
+
+        #region Windows Form Designer generated code
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        ///  Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -62,28 +66,18 @@ namespace WinForms_GUI_App
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        ///  Required method for Designer support - do not modify
-        ///  the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
             SuspendLayout();
-            // 
-            // Main
-            // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoSize = true;
             BackColor = SystemColors.Desktop;
             ClientSize = new Size(804, 450);
-            Name = "Main";
-            Text = "Main";
+            Name = "App Name";
+            Text = "App Name";
             ResumeLayout(false);
         }
-
         #endregion
     }
 }

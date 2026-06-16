@@ -8,4 +8,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="UI\Pages\hjluc3wz.xtv~" />
+  </ItemGroup>
+
 </Project>
