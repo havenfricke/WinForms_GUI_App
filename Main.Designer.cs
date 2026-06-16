@@ -7,7 +7,7 @@ namespace WinForms_GUI_App
 {
     partial class Main
     {
-        private ContentManager _contentManager;
+        private ContentManager contentManager;
         private void InitializeCustomComponents()
         {
             TableLayoutPanel mainGrid = new TableLayoutPanel();
@@ -22,17 +22,17 @@ namespace WinForms_GUI_App
             navComponent.OnNavigate += NavigationComponent_OnNavigate;
 
             // 1. Initialize the ContentManager
-            _contentManager = new ContentManager();
+            contentManager = new ContentManager();
 
             FlowLayoutPanel navPanel = navComponent.InitializeNavbar();
-            Panel contentPanel = _contentManager.InitializeContentPanel();
+            Panel contentPanel = contentManager.InitializeContentPanel();
 
             mainGrid.Controls.Add(navPanel, 0, 0);
             mainGrid.Controls.Add(contentPanel, 1, 0);
             this.Controls.Add(mainGrid);
 
             // 2. Load the default startup view
-            _contentManager.LoadView(new Home());
+            contentManager.LoadView(new Home());
         }
 
         // 3. Handle the routing request
@@ -43,10 +43,10 @@ namespace WinForms_GUI_App
             switch (targetPage)
             {
                 case "Home":
-                    _contentManager.LoadView(new Home());
+                    contentManager.LoadView(new Home());
                     break;
                 case "Settings":
-                    _contentManager.LoadView(new Settings());
+                    contentManager.LoadView(new Settings());
                     break;
                 default:
                     System.Diagnostics.Debug.WriteLine($"View '{targetPage}' not found.");
