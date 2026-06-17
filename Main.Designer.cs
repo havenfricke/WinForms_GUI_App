@@ -1,13 +1,35 @@
-﻿using System.Drawing;
+﻿using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
 using WinForms_GUI_App.UI;
 using WinForms_GUI_App.UI.Pages;
+using WinForms_GUI_App.Utils;
+using static WinForms_GUI_App.AppState;
 
 namespace WinForms_GUI_App
 {
     partial class Main
     {
         private ContentManager contentManager;
+        dynamic watcher = new Watcher();
+
+        private async void HandleUserData()
+        {
+            try
+            {
+                // Call
+                string dataPath = await UserData.InitUserDataAsync();
+
+                // Verify it worked by pulling data from the helper methods
+                string appId = UserData.GetAppId();
+                Debug.WriteLine($"Initialized successfully!\nPath: {dataPath}\nApp ID: {appId}");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Initialization failed: {ex.Message}");
+            }
+        }
+
         private void InitializeCustomComponents()
         {
             TableLayoutPanel mainGrid = new TableLayoutPanel();
@@ -44,12 +66,15 @@ namespace WinForms_GUI_App
             {
                 case "Home":
                     contentManager.LoadView(new Home());
+                    watcher.current_page = "Home";
                     break;
                 case "Settings":
                     contentManager.LoadView(new Settings());
+                    watcher.current_page = "Settings";
                     break;
                 default:
                     System.Diagnostics.Debug.WriteLine($"View '{targetPage}' not found.");
+                    watcher.current_page = "Home";
                     break;
             }
         }

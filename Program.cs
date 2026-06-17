@@ -1,3 +1,5 @@
+using static WinForms_GUI_App.AppState;
+
 namespace WinForms_GUI_App
 {
     internal static class Program
