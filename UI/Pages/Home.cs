@@ -32,11 +32,11 @@ namespace WinForms_GUI_App.UI.Pages
             Controls.Add(title);
             Controls.Add(arduinoData);
 
-            // 2. Subscribe to the concrete event to listen for dynamic updates
+            // Subscribe to the concrete event to listen for dynamic updates
             AppState.watcher.StateUpdated += OnWatcherStateUpdated;
         }
 
-        // 3. Update the UI safely when the Watcher changes
+        // Update the UI safely when the Watcher changes
         private void OnWatcherStateUpdated(string key, object newValue)
         {
             // Only update the label if the arduino_data property is what changed
