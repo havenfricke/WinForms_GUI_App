@@ -55,6 +55,16 @@ namespace WinForms_GUI_App
 
             // 2. Load the default startup view
             contentManager.LoadView(new Home());
+            watcher.current_page = "Home";
+            StartListening();
+        }
+
+        private void UpdateUI(string data)
+        {
+            // Update your specific WinForms controls here
+            // For example, you could update a Label or TextBox with the received data
+            // labelData.Text = data; // Assuming you have a Label named labelData
+            Debug.WriteLine($"Received data: {data}"); // For demonstration, log the received data
         }
 
         // 3. Handle the routing request
@@ -67,15 +77,46 @@ namespace WinForms_GUI_App
                 case "Home":
                     contentManager.LoadView(new Home());
                     watcher.current_page = "Home";
+                    StartListening(); 
                     break;
                 case "Settings":
                     contentManager.LoadView(new Settings());
                     watcher.current_page = "Settings";
+                    StopListening();
                     break;
                 default:
                     System.Diagnostics.Debug.WriteLine($"View '{targetPage}' not found.");
                     watcher.current_page = "Home";
+                    StopListening();
                     break;
+            }
+        }
+
+        // COM port listening logic
+        private void StartListening()
+        {
+            SerialPortListener.listener.DataReceived += OnArduinoDataReceived;
+
+            // EXPLICITLY CALL LISTEN TO OPEN THE PORT
+            SerialPortListener.listener.Listen("COM3", 9600);
+        }
+
+        private void StopListening()
+        {
+            SerialPortListener.listener.Stop();
+            SerialPortListener.listener.DataReceived -= OnArduinoDataReceived;
+        }
+
+        private void OnArduinoDataReceived(object sender, string data)
+        {
+            // Ensure thread safety when updating WinForms controls
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(() => UpdateUI(data)));
+            }
+            else
+            {
+                UpdateUI(data);
             }
         }
 

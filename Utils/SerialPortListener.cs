@@ -62,6 +62,26 @@ namespace WinForms_GUI_App.Utils
             }
         }
 
+        public void Stop()
+        {
+            if (serialPort != null)
+            {
+                if (serialPort.IsOpen)
+                {
+                    serialPort.Close();
+                    Debug.WriteLine("Serial port closed.");
+                }
+                else
+                {
+                    Debug.WriteLine("Serial port is already closed.");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("Serial port was not initialized.");
+            }
+        }
+
         // Required to cleanly release the COM port when the application closes
         public void Dispose()
         {
