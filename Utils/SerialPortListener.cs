@@ -7,6 +7,7 @@ namespace WinForms_GUI_App.Utils
 {
     internal class SerialPortListener : IDisposable
     {
+        public static SerialPortListener listener { get; } = new SerialPortListener();
         private SerialPort serialPort;
 
         // Event to broadcast incoming data to the WinForms UI
@@ -14,7 +15,14 @@ namespace WinForms_GUI_App.Utils
 
         public void Listen(string portName = "COM3", int baudRate = 9600)
         {
-            // Do not use a 'using' block here; the object must remain alive in memory.
+            // Check if the port is already initialized and open
+            if (serialPort != null && serialPort.IsOpen)
+            {
+                Debug.WriteLine("Port is already open and listening.");
+                return;
+            }
+
+            // Initialize only if not already connected
             serialPort = new SerialPort(portName, baudRate);
             serialPort.DataReceived += DataReceivedHandler;
 
@@ -97,4 +105,20 @@ namespace WinForms_GUI_App.Utils
 //{
 //    // Update your specific WinForms controls here
 //    myTextBox.AppendText(data + Environment.NewLine);
+//}
+
+// ARDUINO EXAMPLE CODE
+//void setup()
+//{
+//    // Initialize serial communication at 9600 bits per second
+//    Serial.begin(9600);
+//}
+
+//void loop()
+//{
+//    // Send a message followed by a carriage return and newline
+//    Serial.println("Sensor data: 42");
+
+//    // Wait for 1 second
+//    delay(1000);
 //}
