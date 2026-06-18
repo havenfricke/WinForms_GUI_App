@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using WinForms_GUI_App.UI.Factories;
 // Ensure your Utils and constants namespaces are included
 
 namespace WinForms_GUI_App.UI.Pages

@@ -1,11 +1,12 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
+﻿using WinForms_GUI_App.UI.Factories;
 
-namespace WinForms_GUI_App.UI
+namespace WinForms_GUI_App.UI.Components
 {
     internal class Navigation
     {
+        // Only one nav system should exist, so we can use a singleton pattern here
+        public static Navigation nav { get; } = new Navigation();
+
         // Define a public event that passes a string (the target page name)
         public event EventHandler<string> OnNavigate;
 

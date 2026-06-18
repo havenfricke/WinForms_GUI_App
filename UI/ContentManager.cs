@@ -1,33 +1,24 @@
-﻿using System.Drawing;
-using System.Windows.Forms;
+﻿using WinForms_GUI_App.UI.Components;
 
 namespace WinForms_GUI_App.UI
 {
     internal class ContentManager
     {
-        private Panel containerPanel;
+        public static ContentManager manager { get; } = new ContentManager();
 
-        public Panel InitializeContentPanel()
-        {
-            containerPanel = new Panel();
-            containerPanel.Dock = DockStyle.Fill;
-            containerPanel.BackColor = SystemColors.Desktop;
-            return containerPanel;
-        }
+        // Reference the singleton's panel instance directly
+        private Panel containerPanel = ContentPanel.panel.MainPanel;
 
-        // Method to dynamically swap out the active page
         public void LoadView(UserControl view)
         {
             if (containerPanel == null) return;
 
-            // Remove and dispose of the previous view to prevent memory leaks
             if (containerPanel.Controls.Count > 0)
             {
                 containerPanel.Controls[0].Dispose();
                 containerPanel.Controls.Clear();
             }
 
-            // Configure and inject the new view
             view.Dock = DockStyle.Fill;
             containerPanel.Controls.Add(view);
         }

@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using WinForms_GUI_App.UI;
+using WinForms_GUI_App.UI.Components;
 using WinForms_GUI_App.UI.Pages;
 using WinForms_GUI_App.Utils;
 using static WinForms_GUI_App.AppState;
@@ -10,7 +11,6 @@ namespace WinForms_GUI_App
 {
     partial class Main
     {
-        private ContentManager contentManager;
         dynamic watcher = new Watcher();
 
         private async void HandleUserData()
@@ -40,21 +40,18 @@ namespace WinForms_GUI_App
             mainGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             mainGrid.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
 
-            Navigation navComponent = new Navigation();
-            navComponent.OnNavigate += NavigationComponent_OnNavigate;
+            Navigation.nav.OnNavigate += NavigationComponent_OnNavigate;
 
-            // Initialize the ContentManager
-            contentManager = new ContentManager();
+            FlowLayoutPanel navPanel = Navigation.nav.InitializeNavbar();
 
-            FlowLayoutPanel navPanel = navComponent.InitializeNavbar();
-            Panel contentPanel = contentManager.InitializeContentPanel();
+            // Reference the singleton's panel instance directly
+            Panel contentPanel = ContentPanel.panel.MainPanel;
 
             mainGrid.Controls.Add(navPanel, 0, 0);
             mainGrid.Controls.Add(contentPanel, 1, 0);
             this.Controls.Add(mainGrid);
 
-            // Load the default startup view
-            contentManager.LoadView(new Home());
+            ContentManager.manager.LoadView(new Home());
             watcher.current_page = "Home";
             StartListening();
         }
@@ -67,12 +64,12 @@ namespace WinForms_GUI_App
             switch (targetPage)
             {
                 case "Home":
-                    contentManager.LoadView(new Home());
+                    ContentManager.manager.LoadView(new Home());
                     watcher.current_page = "Home";
                     StartListening(); // Only listen for Arduino data on the Home page
                     break;
                 case "Settings":
-                    contentManager.LoadView(new Settings());
+                    ContentManager.manager.LoadView(new Settings());
                     watcher.current_page = "Settings";
                     StopListening();
                     break;

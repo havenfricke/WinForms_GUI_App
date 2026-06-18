@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
-using WinForms_GUI_App.UI;
+using WinForms_GUI_App.UI.Factories;
 
 namespace WinForms_GUI_App.UI.Pages
 {

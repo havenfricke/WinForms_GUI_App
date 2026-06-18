@@ -1,7 +1,6 @@
-﻿using System.Drawing;
-using System.Windows.Forms;
+﻿
 
-namespace WinForms_GUI_App.UI
+namespace WinForms_GUI_App.UI.Factories
 {
     internal class Header
     {
