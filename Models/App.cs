@@ -11,9 +11,9 @@ namespace WinForms_GUI_App.Models
     {
         public string AppId { get; set; }
         public string AppIp { get; set; }
-        public Dictionary<string, object> AppMetadata { get; set; }
+        public AppMetadata AppMetadata { get; set; }
 
-        public App(string appId, string appIp, Dictionary<string, object> appMetadata)
+        public App(string appId, string appIp, AppMetadata appMetadata)
         {
             AppId = appId;
             AppIp = appIp;

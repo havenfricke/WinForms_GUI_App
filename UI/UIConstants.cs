@@ -16,5 +16,7 @@ namespace WinForms_GUI_App.UI
         public const float Header3Size = 18f;
         public const float Header4Size = 14f;
         public const float Header5Size = 12f;
+        
+        public const float ParagraphSize = 10f;
     }
 }

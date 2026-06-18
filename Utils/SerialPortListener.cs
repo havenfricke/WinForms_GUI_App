@@ -1,7 +1,5 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO.Ports;
-using WinForms_GUI_App.Utils;
 
 namespace WinForms_GUI_App.Utils
 {
@@ -47,10 +45,11 @@ namespace WinForms_GUI_App.Utils
 
             try
             {
-                string incomingData = sp.ReadLine();
+                string incomingData = sp.ReadLine().Trim();
 
-                // Pass the data out of this utility class via the event
-                DataReceived?.Invoke(this, incomingData.Trim());
+                // Pass the data directly into the global app state
+                dynamic state = AppState.watcher;
+                state.arduino_data = incomingData;
             }
             catch (TimeoutException)
             {
@@ -59,6 +58,28 @@ namespace WinForms_GUI_App.Utils
             catch (Exception ex)
             {
                 Debug.WriteLine($"Serial read error: {ex.Message}");
+            }
+        }
+
+        public void SendMessage(string message)
+        {
+            if (serialPort != null && serialPort.IsOpen)
+            {
+                try
+                {
+                    // WriteLine automatically appends a newline character, 
+                    // which helps the Arduino know when the message is complete.
+                    serialPort.WriteLine(message);
+                    Debug.WriteLine($"Sent: {message}");
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Failed to send data: {ex.Message}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("Cannot send message. Port is closed or not initialized.");
             }
         }
 

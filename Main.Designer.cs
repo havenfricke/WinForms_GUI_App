@@ -43,7 +43,7 @@ namespace WinForms_GUI_App
             Navigation navComponent = new Navigation();
             navComponent.OnNavigate += NavigationComponent_OnNavigate;
 
-            // 1. Initialize the ContentManager
+            // Initialize the ContentManager
             contentManager = new ContentManager();
 
             FlowLayoutPanel navPanel = navComponent.InitializeNavbar();
@@ -53,21 +53,13 @@ namespace WinForms_GUI_App
             mainGrid.Controls.Add(contentPanel, 1, 0);
             this.Controls.Add(mainGrid);
 
-            // 2. Load the default startup view
+            // Load the default startup view
             contentManager.LoadView(new Home());
             watcher.current_page = "Home";
             StartListening();
         }
 
-        private void UpdateUI(string data)
-        {
-            // Update your specific WinForms controls here
-            // For example, you could update a Label or TextBox with the received data
-            // labelData.Text = data; // Assuming you have a Label named labelData
-            Debug.WriteLine($"Received data: {data}"); // For demonstration, log the received data
-        }
-
-        // 3. Handle the routing request
+        // Handle the routing request
         private void NavigationComponent_OnNavigate(object sender, string targetPage)
         {
             System.Diagnostics.Debug.WriteLine($"Loading view: {targetPage}");
@@ -77,7 +69,7 @@ namespace WinForms_GUI_App
                 case "Home":
                     contentManager.LoadView(new Home());
                     watcher.current_page = "Home";
-                    StartListening(); 
+                    StartListening(); // Only listen for Arduino data on the Home page
                     break;
                 case "Settings":
                     contentManager.LoadView(new Settings());
@@ -107,16 +99,22 @@ namespace WinForms_GUI_App
             SerialPortListener.listener.DataReceived -= OnArduinoDataReceived;
         }
 
+        private void UpdateAppState(string data)
+        {
+            watcher.arduino_data = data; // Store the latest Arduino data in the watcher
+            Debug.WriteLine($"Received data: {watcher.arduino_data}"); // For demonstration, log the received data
+        }
+
         private void OnArduinoDataReceived(object sender, string data)
         {
             // Ensure thread safety when updating WinForms controls
             if (this.InvokeRequired)
             {
-                this.Invoke(new Action(() => UpdateUI(data)));
+                this.Invoke(new Action(() => UpdateAppState(data)));
             }
             else
             {
-                UpdateUI(data);
+                UpdateAppState(data);
             }
         }
 
