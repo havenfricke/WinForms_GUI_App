@@ -9,32 +9,62 @@ namespace WinForms_GUI_App.UI.Pages
     internal class Home : UserControl
     {
         private Label arduinoData;
+        private Label dataLabel;
 
         public Home()
         {
             BackColor = Color.Transparent;
 
+            // Setup Header
             Header headerFactory = new Header();
             Label title = headerFactory.One("Home Dashboard");
             title.Location = new Point(20, 20);
 
-            // 1. Cast the global instance to dynamic to read its initial properties
-            dynamic watcher = AppState.watcher;
-
-            arduinoData = new Label
-            {
-                Text = watcher.arduino_data, // Grabs the initial string
-                ForeColor = Color.White,
-                Font = new Font(UIConstants.DefaultFontFamily, UIConstants.ParagraphSize),
-                AutoSize = true,
-                Location = new Point(20, 90)
-            };
-
             Controls.Add(title);
-            Controls.Add(arduinoData);
+            title.SendToBack();
+
+            // Initialize the main data grid layout
+            InitializeDataGrid();
 
             // Subscribe to the concrete event to listen for dynamic updates
             AppState.watcher.StateUpdated += OnWatcherStateUpdated;
+        }
+
+        private void InitializeDataGrid()
+        {
+            dynamic watcher = AppState.watcher;
+
+            TableLayoutPanel dataGrid = new TableLayoutPanel();
+            dataGrid.Dock = DockStyle.Fill;
+            dataGrid.ColumnCount = 2;
+            dataGrid.RowCount = 1;
+            dataGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200F));
+            dataGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            dataGrid.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+
+            dataLabel = new Label
+            {
+                Text = "Arduino Data:",
+                ForeColor = Color.White,
+                Font = new Font(UIConstants.DefaultFontFamily, UIConstants.ParagraphSize),
+                AutoSize = true,
+                Anchor = AnchorStyles.Left // Centers the text vertically in the grid cell
+            };
+
+            arduinoData = new Label
+            {
+                Text = watcher.arduino_data,
+                ForeColor = Color.White,
+                Font = new Font(UIConstants.DefaultFontFamily, UIConstants.ParagraphSize),
+                AutoSize = true,
+                Anchor = AnchorStyles.Left // Centers the text vertically in the grid cell
+            };
+
+            dataGrid.Controls.Add(dataLabel, 0, 0);
+            dataGrid.Controls.Add(arduinoData, 1, 0);
+
+            // Add Grid to the UserControl
+            Controls.Add(dataGrid);
         }
 
         // Update the UI safely when the Watcher changes

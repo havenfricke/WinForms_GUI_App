@@ -10,7 +10,7 @@ namespace WinForms_GUI_App
 {
     internal class AppState
     {
-        // 1. Establish a single global instance of your Watcher
+        // Establish a single global instance of Watcher
         public static Watcher watcher { get; } = new Watcher();
 
         public class Watcher : DynamicObject
@@ -24,9 +24,11 @@ namespace WinForms_GUI_App
                 WriteIndented = false
             };
 
-            // 2. Add an event to bridge the dynamic object to WinForms
+            // Add an event to bridge the dynamic object to WinForms
+            // Example usage: AppState.watcher.StateUpdated += OnWatcherStateUpdated;
             public event Action<string, object> StateUpdated;
 
+            // The main constructor initializes the state with default values (See Models/AppMetadata.cs)
             public Watcher()
             {
                 state["current_page"] = "Dashboard";
@@ -69,7 +71,12 @@ namespace WinForms_GUI_App
                 // Assuming UserData exists in your environment
                 app = new App(UserData.GetAppId(), UserData.GetAppIp(), metadataSnapshot);
 
-                // 3. Fire the event to tell WinForms the dynamic state just changed
+                // payload for the POST request
+                string payload = JsonSerializer.Serialize(app, jsonOptions);
+
+                Debug.WriteLine($"Updated App Metadata: {payload}");
+
+                // Fire the event to tell WinForms the dynamic state just changed
                 StateUpdated?.Invoke(name, newValue);
             }
         }
