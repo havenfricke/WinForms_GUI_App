@@ -83,6 +83,37 @@ namespace WinForms_GUI_App.Utils
             }
         }
 
+        public string GetDefaultComPort()
+        {
+            try
+            {
+                string[] ports = SerialPort.GetPortNames();
+                if (ports.Length > 0)
+                {
+                    return ports[0]; // Return the first available port
+                }
+            }
+            catch
+            {
+                // Suppress or log hardware polling errors
+            }
+
+            return "None";
+        }
+
+        public string[] GetAvailablePorts()
+        {
+            try
+            {
+                return SerialPort.GetPortNames();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error fetching serial ports: {ex.Message}");
+                return new string[0];
+            }
+        }
+
         public void Stop()
         {
             if (serialPort != null)

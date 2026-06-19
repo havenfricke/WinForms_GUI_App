@@ -33,6 +33,7 @@ namespace WinForms_GUI_App
             {
                 state["current_page"] = "Dashboard";
                 state["arduino_data"] = "";
+                state["selected_port"] = SerialPortListener.listener.GetDefaultComPort();
             }
 
             public override bool TrySetMember(SetMemberBinder binder, object value)
@@ -65,7 +66,8 @@ namespace WinForms_GUI_App
 
                 var metadataSnapshot = new AppMetadata(
                     state["current_page"] as string,
-                    state["arduino_data"] as string
+                    state["arduino_data"] as string,
+                    state["selected_port"] as string
                 );
 
                 // Assuming UserData exists in your environment
