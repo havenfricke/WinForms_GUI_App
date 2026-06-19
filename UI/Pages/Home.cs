@@ -41,10 +41,12 @@ namespace WinForms_GUI_App.UI.Pages
             dataGrid.Dock = DockStyle.Fill;
             dataGrid.ColumnCount = 2;
             dataGrid.RowCount = 2;
-            dataGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200F));
+
+            dataGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F));
             dataGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            dataGrid.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            dataGrid.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F));
+
+            dataGrid.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            dataGrid.RowStyles.Add(new RowStyle(SizeType.Absolute, 33F));
 
             dataLabel = new Label
             {
