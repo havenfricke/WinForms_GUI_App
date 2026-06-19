@@ -42,13 +42,13 @@ The UI is largely built in code rather than relying exclusively on the drag-and-
 ```cpp
 void setup()
 {
-    // Initialize serial communication at 9600 bits per second
+    // Initialize serial comms
     Serial.begin(9600);
 }
 
 void loop()
 {
-// Send a message followed by a carriage return and newline
+// Send a message
     Serial.println("Sensor data: 42");
 
     // Wait for 1 second
