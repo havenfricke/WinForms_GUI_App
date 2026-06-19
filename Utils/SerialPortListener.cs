@@ -61,7 +61,7 @@ namespace WinForms_GUI_App.Utils
             }
         }
 
-        public void SendMessage(string message)
+        public void SendCommand(string command)
         {
             if (serialPort != null && serialPort.IsOpen)
             {
@@ -69,8 +69,8 @@ namespace WinForms_GUI_App.Utils
                 {
                     // WriteLine automatically appends a newline character, 
                     // which helps the Arduino know when the message is complete.
-                    serialPort.WriteLine(message);
-                    Debug.WriteLine($"Sent: {message}");
+                    serialPort.WriteLine(command);
+                    Debug.WriteLine($"Sent: {command}");
                 }
                 catch (Exception ex)
                 {

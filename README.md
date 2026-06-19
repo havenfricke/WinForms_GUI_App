@@ -40,18 +40,43 @@ The UI is largely built in code rather than relying exclusively on the drag-and-
 
 ### Arduino Test Code
 ```cpp
-void setup()
+void setup() 
 {
-    // Initialize serial comms
+    // Start serial at 9600
     Serial.begin(9600);
+    
+    // Send a startup message so C# knows the board is alive
+    Serial.println("ARDUINO_READY"); 
 }
 
 void loop()
 {
-// Send a message
-    Serial.println("Sensor data: 42");
+   // Send outgoing test data
+   Serial.println("Sensor data: 42");
 
-    // Wait for 1 second
-    delay(1000);
+   // Check if there are bytes waiting in the serial buffer
+   if (Serial.available() > 0)
+   {
+       // Read strictly until the newline character arrives.
+       // This is significantly faster and prevents timeout hangs.
+       String incomingMessage = Serial.readStringUntil('\n');
+       
+       // Remove extra spaces or hidden carriage returns (\r)
+       incomingMessage.trim(); 
+       
+       // Only act if the string isn't blank
+       if (incomingMessage.length() > 0) 
+       {
+           // Echo the message back to the monitor
+           Serial.print("Arduino received: ");
+           Serial.println(incomingMessage);
+       }
+   }
+
+   // Wait for 1 second before running the loop again
+   delay(1000);
 }
 ```
+
+Sending a command from the C# application to the Arduino will trigger the Arduino to echo back the message, which can be observed in the serial monitor. 
+The Arduino code is designed to send a test message every second and listen for incoming messages from the C# application.

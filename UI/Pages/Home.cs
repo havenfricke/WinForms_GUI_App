@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using WinForms_GUI_App.UI.Factories;
+using WinForms_GUI_App.Utils;
 // Ensure your Utils and constants namespaces are included
 
 namespace WinForms_GUI_App.UI.Pages
@@ -10,6 +11,8 @@ namespace WinForms_GUI_App.UI.Pages
     {
         private Label arduinoData;
         private Label dataLabel;
+        private TextBox messageTextBox;
+        private Button sendButton;
 
         public Home()
         {
@@ -37,10 +40,11 @@ namespace WinForms_GUI_App.UI.Pages
             TableLayoutPanel dataGrid = new TableLayoutPanel();
             dataGrid.Dock = DockStyle.Fill;
             dataGrid.ColumnCount = 2;
-            dataGrid.RowCount = 1;
+            dataGrid.RowCount = 2;
             dataGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200F));
             dataGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             dataGrid.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            dataGrid.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F));
 
             dataLabel = new Label
             {
@@ -62,6 +66,36 @@ namespace WinForms_GUI_App.UI.Pages
 
             dataGrid.Controls.Add(dataLabel, 0, 0);
             dataGrid.Controls.Add(arduinoData, 1, 0);
+
+            sendButton = new Button
+            {
+                Text = "Send Command",
+                BackColor = Color.FromArgb(50, 50, 50),
+                ForeColor = Color.White,
+                Font = new Font(UIConstants.DefaultFontFamily, UIConstants.ParagraphSize),
+                Dock = DockStyle.Fill
+            };
+
+            messageTextBox = new TextBox
+            {
+                Multiline = true,
+                ReadOnly = false,
+                BackColor = Color.FromArgb(30, 30, 30),
+                ForeColor = Color.White,
+                Font = new Font(UIConstants.DefaultFontFamily, UIConstants.ParagraphSize),
+                Dock = DockStyle.Fill
+            };
+
+            sendButton.Click += (sender, e) =>
+            {
+                // send command to arduino via SerialPortListener
+                string command = messageTextBox.Text;
+                SerialPortListener.listener.SendCommand(command);
+                messageTextBox.Text = null;
+            };
+
+            dataGrid.Controls.Add(sendButton, 0, 1);
+            dataGrid.Controls.Add(messageTextBox, 1, 1);
 
             // Add Grid to the UserControl
             Controls.Add(dataGrid);
