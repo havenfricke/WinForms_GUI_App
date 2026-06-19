@@ -37,3 +37,21 @@ the primary display panel.
 
 The UI is largely built in code rather than relying exclusively on the drag-and-drop Windows Forms Designer. It utilizes factory classes 
 (like Header and NavButtons) to generate layout structures, apply styling, and wire up event handlers programmatically.
+
+### Arduino Test Code
+```cpp
+void setup()
+{
+    // Initialize serial communication at 9600 bits per second
+    Serial.begin(9600);
+}
+
+void loop()
+{
+// Send a message followed by a carriage return and newline
+    Serial.println("Sensor data: 42");
+
+    // Wait for 1 second
+    delay(1000);
+}
+```
