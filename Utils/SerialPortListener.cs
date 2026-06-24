@@ -22,6 +22,8 @@ namespace WinForms_GUI_App.Utils
 
             // Initialize only if not already connected
             serialPort = new SerialPort(portName, baudRate);
+            serialPort.DtrEnable = true;
+            serialPort.ReadTimeout = 2000; // Drop the read attempt if \n is not received within 500ms
             serialPort.DataReceived += DataReceivedHandler;
 
             try
@@ -148,49 +150,3 @@ namespace WinForms_GUI_App.Utils
         }
     }
 }
-
-
-//// Example implementation
-//private SerialPortListener _listener;
-
-//private void StartListening()
-//{
-//    listener = new SerialPortListener();
-//    listener.DataReceived += OnArduinoDataReceived;
-//    listener.Listen("COM3", 9600);
-//}
-
-//private void OnArduinoDataReceived(object sender, string data)
-//{
-//    // Ensure thread safety when updating WinForms controls
-//    if (this.InvokeRequired)
-//    {
-//        this.Invoke(new Action(() => UpdateUI(data)));
-//    }
-//    else
-//    {
-//        UpdateUI(data);
-//    }
-//}
-
-//private void UpdateUI(string data)
-//{
-//    // Update your specific WinForms controls here
-//    myTextBox.AppendText(data + Environment.NewLine);
-//}
-
-// ARDUINO EXAMPLE CODE
-//void setup()
-//{
-//    // Initialize serial communication at 9600 bits per second
-//    Serial.begin(9600);
-//}
-
-//void loop()
-//{
-//    // Send a message followed by a carriage return and newline
-//    Serial.println("Sensor data: 42");
-
-//    // Wait for 1 second
-//    delay(1000);
-//}

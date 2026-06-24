@@ -11,7 +11,7 @@ namespace WinForms_GUI_App
 {
     partial class Main
     {
-        dynamic watcher = new Watcher();
+        dynamic watcher = AppState.watcher;
 
         private async void HandleUserData()
         {
@@ -84,35 +84,13 @@ namespace WinForms_GUI_App
         // COM port listening logic
         private void StartListening()
         {
-            SerialPortListener.listener.DataReceived += OnArduinoDataReceived;
-
             // EXPLICITLY CALL LISTEN TO OPEN THE PORT
-            SerialPortListener.listener.Listen("COM3", 9600);
+            SerialPortListener.listener.Listen(watcher.selected_port, 9600);
         }
 
         private void StopListening()
         {
             SerialPortListener.listener.Stop();
-            SerialPortListener.listener.DataReceived -= OnArduinoDataReceived;
-        }
-
-        private void UpdateAppState(string data)
-        {
-            watcher.arduino_data = data; // Store the latest Arduino data in the watcher
-            Debug.WriteLine($"Received data: {watcher.arduino_data}"); // For demonstration, log the received data
-        }
-
-        private void OnArduinoDataReceived(object sender, string data)
-        {
-            // Ensure thread safety when updating WinForms controls
-            if (this.InvokeRequired)
-            {
-                this.Invoke(new Action(() => UpdateAppState(data)));
-            }
-            else
-            {
-                UpdateAppState(data);
-            }
         }
 
         #region Windows Form Designer generated code
